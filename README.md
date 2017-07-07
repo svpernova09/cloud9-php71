@@ -3,7 +3,7 @@
 ### Usage
 
 ```
-sh install.sh
+bash install.sh
 ```
 
 Verify installation by viewing info.php in your workspace's url

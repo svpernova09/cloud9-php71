@@ -13,3 +13,31 @@ sudo a2dismod php5
 sudo a2enmod php7.1
 
 sudo service apache2
+
+# Install MySQL
+
+sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password secret"
+sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password secret"
+sudo apt-get install -y mysql-server
+
+# Configure MySQL Password Lifetime
+
+sudo echo "default_password_lifetime = 0" >> /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# Configure MySQL Remote Access
+
+sudo sed -i '/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+
+mysql --user="root" --password="secret" -e "GRANT ALL ON *.* TO root@'0.0.0.0' IDENTIFIED BY 'secret' WITH GRANT OPTION;"
+sudo service mysql restart
+
+mysql --user="root" --password="secret" -e "CREATE USER 'homestead'@'0.0.0.0' IDENTIFIED BY 'secret';"
+mysql --user="root" --password="secret" -e "GRANT ALL ON *.* TO 'homestead'@'0.0.0.0' IDENTIFIED BY 'secret' WITH GRANT OPTION;"
+mysql --user="root" --password="secret" -e "GRANT ALL ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret' WITH GRANT OPTION;"
+mysql --user="root" --password="secret" -e "FLUSH PRIVILEGES;"
+mysql --user="root" --password="secret" -e "CREATE DATABASE homestead character set UTF8mb4 collate utf8mb4_bin;"
+sudo service mysql restart
+
+# Add Timezone Support To MySQL
+
+sudo mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql --user=root --password=secret mysql
