@@ -12,7 +12,7 @@ sudo cp /etc/apache2/envvars.bak /etc/apache2/envvars
 sudo a2dismod php5
 sudo a2enmod php7.1
 
-sudo service apache2
+sudo service apache2 restart
 
 # Install MySQL
 
