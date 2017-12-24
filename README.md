@@ -1,4 +1,4 @@
-## Install PHP 7.1 on a Cloud 9 Workspace
+## Install PHP 7.2 on a Cloud 9 Workspace
 
 ### Usage
 
